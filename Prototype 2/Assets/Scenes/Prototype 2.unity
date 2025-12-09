@@ -596,9 +596,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animalPrefabs:
+  - {fileID: 5372515041855142741, guid: 02c563727af561848aaa7ba87130c6e0, type: 3}
   - {fileID: 8323164939648204284, guid: 463b4e567dfc6bb47be85d7f01e4fdf2, type: 3}
   - {fileID: 2273757795877851690, guid: 09b5f3c937a0e3448ab1e817a4868b72, type: 3}
-  - {fileID: 5372515041855142741, guid: 02c563727af561848aaa7ba87130c6e0, type: 3}
 --- !u!4 &519200973
 Transform:
   m_ObjectHideFlags: 0
@@ -730,13 +730,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalRotation: {x: 0.21380928, y: -0, z: -0, w: 0.9768754}
   m_LocalPosition: {x: 0, y: 10, z: -15}
   m_LocalScale: {x: 1, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 24.691, y: 0, z: 0}
 --- !u!850595691 &640270471
 LightingSettings:
   m_ObjectHideFlags: 0
