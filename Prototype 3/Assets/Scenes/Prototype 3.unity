@@ -195,9 +195,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpForce: 300
   gravityModifier: 0.75
+  isOnGround: 1
+  isOnObstacle: 1
+  isHitByObstacle: 0
+  canJump: 1
+  canMove: 1
   collisionOffset: 0.01
+  hitCount: 0
   maxHits: 3
-  diff: 0
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,13 +326,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 689d953c7614a5541bee52adcc4fa3db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerIsOnGround: 1
-  playerIsOnObstacle: 0
-  playerIsHitByObstacle: 0
-  playerCanJump: 1
-  collisionOffset: 0
-  hitCount: 0
-  maxHits: 10
   freezeScene: 0
   gameOver: 0
 --- !u!4 &493945525

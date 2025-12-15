@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private GameManager gameManager;
     private Rigidbody playerRb;
 
     public float jumpForce;
@@ -17,12 +18,11 @@ public class PlayerController : MonoBehaviour
 
     public float collisionOffset = .01f;
     //[HideInInspector]  public float jumpDiff;
-    [HideInInspector] public int hitCount;
-    public int maxHits;
 
     // Start is called before the first frame update
     void Start() 
     {
+        gameManager = GameManager.Instance;
         playerRb = GetComponent<Rigidbody>();
         Physics.gravity *= gravityModifier;
     }
@@ -37,8 +37,6 @@ public class PlayerController : MonoBehaviour
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
-
-        if (hitCount == maxHits) { canMove = false; }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -79,6 +77,7 @@ public class PlayerController : MonoBehaviour
             case "Obstacle":
                 isOnObstacle = false;
                 isHitByObstacle = false;
+                gameManager.UnFreezeScene();
                 break;
         }
     }
@@ -90,8 +89,12 @@ public class PlayerController : MonoBehaviour
 
         if (isHit)
         {
-            if (!obstacleControllerScript.isHit) { hitCount++; }
+            if (!obstacleControllerScript.isHit)
+            {
+                gameManager.LoseLife();
+            }
 
+            gameManager.FreezeScene();
             isHitByObstacle = true;
             obstacleControllerScript.isHit = true;
         }

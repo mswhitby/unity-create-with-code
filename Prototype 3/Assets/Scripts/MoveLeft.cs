@@ -7,14 +7,15 @@ public class MoveLeft : MonoBehaviour
     public float speed = 30;
     private float leftBound = -10;
 
+    //private GameManager gameManager;
     private GameManager gameManager;
-    //private PlayerController playerControllerScript;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         //playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        //gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager = GameManager.Instance;
     }
 
     // Update is called once per frame

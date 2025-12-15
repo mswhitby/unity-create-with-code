@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    private GameManager gameManager;
+    //private GameManager gameManager;
+    private GameManager gameManager = GameManager.Instance;
     public GameObject obstaclePrefab;
 
     public Vector3 spawnPos = new Vector3(25, 0, 0);
@@ -17,7 +18,8 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         //playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        //gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager = GameManager.Instance;
         InvokeRepeating("SpawnObstacle", startDelay, repeatRate);
         
     }
