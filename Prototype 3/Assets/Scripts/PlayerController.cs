@@ -5,7 +5,16 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private GameManager gameManager;
+
     private Rigidbody playerRb;
+    private Animator playerAnim;
+    private AudioSource playerAudio;
+
+    public ParticleSystem explosionParticle;
+    public ParticleSystem dirtParticle;
+
+    public AudioClip jumpSound;
+    public AudioClip crashSound;
 
     public float jumpForce;
     public float gravityModifier;
@@ -14,28 +23,43 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool isOnObstacle = false;
     [HideInInspector] public bool isHitByObstacle = false;
     [HideInInspector] public bool canJump = true;
-    [HideInInspector] public bool canMove = true;
+    //[HideInInspector] public bool canMove = true;
 
     public float collisionOffset = .01f;
     //[HideInInspector]  public float jumpDiff;
+    //public float jumpDiff;
 
     // Start is called before the first frame update
     void Start() 
     {
         gameManager = GameManager.Instance;
+
         playerRb = GetComponent<Rigidbody>();
         Physics.gravity *= gravityModifier;
+
+        playerAnim = GetComponent<Animator>();
+        playerAudio = GetComponent<AudioSource>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        canJump = isOnGround || isOnObstacle || isHitByObstacle;
-        canMove = !isHitByObstacle;
+        canJump = (isOnGround || isOnObstacle || isHitByObstacle) && !gameManager.gameOver;
 
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            playerAnim.SetTrigger("Jump_trig");
+            playerAudio.PlayOneShot(jumpSound, 1.0f);
+            dirtParticle.Stop();
+        }
+
+        if (gameManager.gameOver)
+        {
+            dirtParticle.Stop();
+            playerAnim.SetBool("Death_b", true);
+            playerAnim.SetInteger("DeathType_int", 1);
         }
     }
 
@@ -47,9 +71,11 @@ public class PlayerController : MonoBehaviour
         {
             case "Ground":
                 isOnGround = true;
+                dirtParticle.Play();
                 break;
 
             case "Obstacle":
+                dirtParticle.Stop();
                 processObstaclecollision(collision);
                 break;
         }
@@ -86,17 +112,20 @@ public class PlayerController : MonoBehaviour
     {
         ObstacleController obstacleControllerScript = collision.gameObject.GetComponent<ObstacleController>();
         bool isHit = obstacleControllerScript.obstacleHeight - transform.position.y > collisionOffset;
+        //jumpDiff = obstacleControllerScript.obstacleHeight - transform.position.y;
 
         if (isHit)
         {
+            gameManager.FreezeScene();
+            playerAudio.PlayOneShot(crashSound, 1.0f);
+            isHitByObstacle = true;
+
             if (!obstacleControllerScript.isHit)
             {
+                explosionParticle.Play();
                 gameManager.LoseLife();
+                obstacleControllerScript.isHit = true;
             }
-
-            gameManager.FreezeScene();
-            isHitByObstacle = true;
-            obstacleControllerScript.isHit = true;
         }
         else
         {

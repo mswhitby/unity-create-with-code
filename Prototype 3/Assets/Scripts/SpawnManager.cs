@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    //private GameManager gameManager;
     private GameManager gameManager = GameManager.Instance;
     public GameObject obstaclePrefab;
 
@@ -17,11 +16,8 @@ public class SpawnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
-        //gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         gameManager = GameManager.Instance;
         InvokeRepeating("SpawnObstacle", startDelay, repeatRate);
-        
     }
 
     // Update is called once per frame
@@ -32,12 +28,6 @@ public class SpawnManager : MonoBehaviour
 
     void SpawnObstacle()
     {
-
-        //if (playerControllerScript.gameOver == false | playerControllerScript.isOnObstacle == true)
-        //{
-        //    Instantiate(obstaclePrefab, spawnPos, obstaclePrefab.transform.rotation);
-        //}
-
         if (!gameManager.gameOver && !gameManager.freezeScene)
         {
             Instantiate(obstaclePrefab, spawnPos, obstaclePrefab.transform.rotation);
