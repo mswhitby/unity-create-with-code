@@ -11,16 +11,15 @@ public class PlayerController : MonoBehaviour
     public float gravityModifier;
 
     public float collisionOffset = .01f;
-    public int hitCount;
-    public int maxHits = 3;
+    public int lives = 3;
     public float diff;
 
     [HideInInspector] public bool isOnGround = true;
     [HideInInspector] public bool isOnObstacle = false;
     [HideInInspector] public bool isHitByObstacle = false;
     [HideInInspector] public bool canJump = true;
-    [HideInInspector] public bool freezeScroll = false;
-    [HideInInspector] public bool gameOver;
+    [HideInInspector] public bool canMove = true;
+    [HideInInspector] public bool gameOver = false;
 
     // Start is called before the first frame update
     void Start() 
@@ -33,7 +32,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         canJump = isOnGround || isOnObstacle || isHitByObstacle;
-        freezeScroll = gameOver || isHitByObstacle;
+        canMove = !gameOver && !isHitByObstacle;
 
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
         {
@@ -41,7 +40,7 @@ public class PlayerController : MonoBehaviour
             //isOnGround = false;
         }
 
-        if (hitCount == maxHits)
+        if (lives <= 0)
         {
             gameOver = true;
             Debug.Log("Game Over!");
@@ -50,55 +49,24 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //if (collision.gameObject.CompareTag("Ground")) {
-        //    isOnGround = true;
-        //}
-
-        //if (collision.gameObject.CompareTag("Obstacle"))
-        //{
-
-        //    ObstacleController obstacleControllerScript = collision.gameObject.GetComponent<ObstacleController>();
-        //    float jumpHeight = transform.position.y;
-        //    diff = obstacleControllerScript.obstacleHeight - jumpHeight;
-
-        //    if (diff > .01 && !obstacleControllerScript.isHit)
-        //    {
-        //        hitCount += 1;
-        //        collision.gameObject.GetComponent<ObstacleController>().isHit = true;
-        //    }
-
-        //}
-
-        string collisionObjectTag = collision.gameObject.tag;
-
-        switch (collisionObjectTag)
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            case "Ground":
-                isOnGround = true;
-                break;
+            isOnGround = true;
+        }
 
-            case "Obstacle":
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
 
-                ObstacleController obstacleControllerScript = collision.gameObject.GetComponent<ObstacleController>();
-                float jumpHeight = transform.position.y;
-                diff = obstacleControllerScript.obstacleHeight - jumpHeight;
-                bool isHit = obstacleControllerScript.obstacleHeight - jumpHeight > collisionOffset;
+            ObstacleController obstacleControllerScript = collision.gameObject.GetComponent<ObstacleController>();
+            float jumpHeight = transform.position.y;
+            diff = obstacleControllerScript.obstacleHeight - jumpHeight;
 
-                if (isHit && !obstacleControllerScript.isHit)
-                {
-                    hitCount += 1;
-                    isHitByObstacle = true;
-                    obstacleControllerScript.isHit = true;
-                }
-                else if (isHit)
-                {
-                    isHitByObstacle = true;
-                }
-                else
-                {
-                    isOnObstacle = true;
-                }
-                break;
+            if (diff > .01 && !obstacleControllerScript.isHit)
+            {
+                lives--;
+                collision.gameObject.GetComponent<ObstacleController>().isHit = true;
+            }
+
         }
     }
 
@@ -107,20 +75,10 @@ public class PlayerController : MonoBehaviour
         // Example: Continuously apply an effect or check a condition while touching
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            //ObstacleController obstacleControllerScript = collision.gameObject.GetComponent<ObstacleController>();
-            //diff = obstacleControllerScript.obstacleHeight - transform.position.y;
-
-            //if (diff > .01)
-            //{
-            //    isHitByObstacle = true;
-            //}
-            //else
-            //{
-            //    isOnObstacle = true;
-            //}
 
             ObstacleController obstacleControllerScript = collision.gameObject.GetComponent<ObstacleController>();
-            bool isHit = obstacleControllerScript.obstacleHeight - transform.position.y > collisionOffset;
+            diff = obstacleControllerScript.obstacleHeight - transform.position.y;
+            bool isHit = diff > collisionOffset;
 
             if (isHit)
             {
@@ -138,29 +96,16 @@ public class PlayerController : MonoBehaviour
     void OnCollisionExit(Collision collision)
     {
 
-        //if (collision.gameObject.CompareTag("Ground"))
-        //{
-        //    isOnGround = false;
-        //}
-
-        //if (collision.gameObject.CompareTag("Obstacle"))
-        //{
-        //    isOnObstacle = false;
-        //    isHitByObstacle = false;
-        //}
-
-        string collisionObjectTag = collision.gameObject.tag;
-
-        switch(collisionObjectTag)
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            case "Ground":
-                isOnGround = false;
-                break;
+            isOnGround = false;
+        }
 
-            case "Obstacle":
-                isOnObstacle = false;
-                isHitByObstacle = false;
-                break;
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            isOnObstacle = false;
+            isHitByObstacle = false;
         }
     }
+
 }
