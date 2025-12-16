@@ -21,11 +21,24 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool canMove = true;
     [HideInInspector] public bool gameOver = false;
 
+    private Animator playerAnim;
+    
+    public ParticleSystem explosionParticle;
+    public ParticleSystem dirtParticle;
+
+    private AudioSource playerAudio;
+    public AudioClip jumpSound;
+    public AudioClip crashSound;
+
+
     // Start is called before the first frame update
     void Start() 
     {
         playerRb = GetComponent<Rigidbody>();
         Physics.gravity *= gravityModifier;
+
+        playerAnim = GetComponent<Animator>();
+        playerAudio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -38,12 +51,18 @@ public class PlayerController : MonoBehaviour
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             //isOnGround = false;
+            playerAnim.SetTrigger("Jump_trig");
+            dirtParticle.Stop();
+            playerAudio.PlayOneShot(jumpSound, 1.0f);
         }
 
         if (lives <= 0)
         {
             gameOver = true;
             Debug.Log("Game Over!");
+
+            playerAnim.SetBool("Death_b", true);
+            playerAnim.SetInteger("DeathType_int", 1);
         }
     } 
 
@@ -52,10 +71,12 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isOnGround = true;
+            dirtParticle.Play();
         }
 
         if (collision.gameObject.CompareTag("Obstacle"))
         {
+            dirtParticle.Stop();
 
             ObstacleController obstacleControllerScript = collision.gameObject.GetComponent<ObstacleController>();
             float jumpHeight = transform.position.y;
@@ -63,6 +84,8 @@ public class PlayerController : MonoBehaviour
 
             if (diff > .01 && !obstacleControllerScript.isHit)
             {
+                explosionParticle.Play();
+                playerAudio.PlayOneShot(crashSound, 1.0f);
                 lives--;
                 collision.gameObject.GetComponent<ObstacleController>().isHit = true;
             }
