@@ -5,27 +5,45 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject enemyPrefab;
+    public GameObject enemy2Prefab;
     private float spawnRange = 9;
+    public int enemyCount;
+    public int waveNumber = 1;
 
     // Start is called before the first frame update
     void Start()
     {
-        SpawnEnemy();
+
         //Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
+        //SpawnEnemy();
+        //SpawnEnemyWave();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
+        enemyCount = FindObjectsOfType<Enemy>().Length;
 
-    void SpawnEnemy()
-    {
-        float spawnPosX = Random.Range(-spawnRange, spawnRange);
-        float spawnPosZ = Random.Range(-spawnRange, spawnRange);
-        Vector3 spawnPos = new Vector3(spawnPosX, 0, spawnPosZ);
-        Instantiate(enemyPrefab, spawnPos, enemyPrefab.transform.rotation);
+        if (enemyCount == 0)
+        {
+            SpawnEnemyWave(waveNumber);
+            waveNumber++;
+        }
+
+        if (Input.GetKeyDown("1"))
+        {
+            SpawnEnemy(enemyPrefab);
+        }
+
+        if (Input.GetKeyDown("2"))
+        {
+            SpawnEnemy(enemy2Prefab);
+        }
+
+
+
+
+
     }
 
     private Vector3 GenerateSpawnPosition()
@@ -35,6 +53,34 @@ public class SpawnManager : MonoBehaviour
         Vector3 randomPos = new Vector3(spawnPosX, 0, spawnPosZ);
         return randomPos;
     }
+    void SpawnEnemy(GameObject enemyType)
+    {
+        float spawnPosX = Random.Range(-spawnRange, spawnRange);
+        float spawnPosZ = Random.Range(-spawnRange, spawnRange);
+        Vector3 spawnPos = new Vector3(spawnPosX, 0, spawnPosZ);
+        Instantiate(enemyType, spawnPos, enemyType.transform.rotation);
+    }
+
+    void SpawnEnemyWave(int enemiesToSpawn)
+    {
+        int randomInt = Random.Range(0, enemiesToSpawn);
+        int numEnemy1 = Mathf.Max(randomInt, (enemiesToSpawn- randomInt));
+        int numEnemy2 = enemiesToSpawn - numEnemy1; ;
+
+        Debug.Log($"Enemy1: {numEnemy1}, Enemy2: {numEnemy2}");
+
+        for (int i = 0; i < numEnemy1; i++)
+        {
+            SpawnEnemy(enemyPrefab);
+        }
+
+        for (int i = 0; i < numEnemy2; i++)
+        {
+            SpawnEnemy(enemy2Prefab);
+        }
+    }
+
+    
 
     //float CalculateApothem()
     //{

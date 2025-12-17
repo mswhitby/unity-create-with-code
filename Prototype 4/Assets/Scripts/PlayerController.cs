@@ -4,12 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
+
 {
+    private GameObject focalPoint;
+
     public Rigidbody playerRb;
     public float speed = 5.0f;
 
-    private GameObject focalPoint;
-
+    public bool hasPowerup;
+    public float powerupStrength = 15.0f;
+    public GameObject powerupIndicator;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +32,8 @@ public class PlayerController : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         playerRb.AddForce(focalPoint.transform.right * speed * horizontalInput);
 
+        powerupIndicator.transform.position = transform.position + new Vector3(0, -.5f, 0);
+
         if (Input.GetKeyDown("space"))
         {
             Stop();
@@ -37,7 +43,52 @@ public class PlayerController : MonoBehaviour
         {
             Restart();
         }
+
+        if (Input.GetKeyDown("p"))
+        {
+            StartCoroutine(PowerupCountdownRoutine());
+        }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Powerup"))
+        {
+            hasPowerup = true;
+            Destroy(other.gameObject);
+            StartCoroutine(PowerupCountdownRoutine());
+            //powerupIndicator.gameObject.SetActive(true);
+            //powerupIndicator.SetActive(true); // Shortcut
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy") && hasPowerup)
+        {
+            GameObject enemy = collision.gameObject;
+            Rigidbody enemyRigidbody = enemy.GetComponent<Rigidbody>();
+            Vector3 awayFromPlayer = enemy.transform.position - transform.position;
+
+            Debug.Log("Collided with " + enemy.name);
+            Debug.Log("Powerup set to " + hasPowerup);
+
+            enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
+        }
+    }
+
+    IEnumerator PowerupCountdownRoutine() 
+    {
+        powerupIndicator.gameObject.SetActive(true);
+        yield return new WaitForSeconds(7);
+        hasPowerup = false;
+        powerupIndicator.gameObject.SetActive(false);
+        //powerupIndicator.SetActive(false); // Shortcut
+    }
+
+
+
+
 
     void Stop()
     {
