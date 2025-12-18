@@ -279,8 +279,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9edd5d958ce4c914fadbec6381c24b49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 6908927347762325085, guid: b2e0c119845befc4ea534ae326d0f8f7, type: 3}
-  enemy2Prefab: {fileID: 1532857974506536317, guid: 7fbd3616801bff34187fa54c47773c3f, type: 3}
+  enemyPrefabs:
+  - {fileID: 6908927347762325085, guid: b2e0c119845befc4ea534ae326d0f8f7, type: 3}
+  - {fileID: 1532857974506536317, guid: 7fbd3616801bff34187fa54c47773c3f, type: 3}
   powerupPrefab: {fileID: 7419492473130202444, guid: 9643545f9b60c20438429866c11c8416, type: 3}
   enemyCount: 0
   waveNumber: 1
@@ -744,6 +745,7 @@ MonoBehaviour:
   hasPowerup: 0
   powerupStrength: 15
   powerupIndicator: {fileID: 947118581}
+  powerupY: 0
 --- !u!1001 &2117749484
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -906,7 +908,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 4374071164873886634, guid: 9643545f9b60c20438429866c11c8416, type: 3}
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject enemyPrefab;
-    public GameObject enemy2Prefab;
+    //public GameObject enemyPrefab;
+    //public GameObject enemy2Prefab;
+    public GameObject[] enemyPrefabs;
     public GameObject powerupPrefab;
 
     private float spawnRange = 9;
@@ -35,12 +36,12 @@ public class SpawnManager : MonoBehaviour
 
         if (Input.GetKeyDown("1"))
         {
-            SpawnEnemy(enemyPrefab);
+            SpawnEnemy(0);
         }
 
         if (Input.GetKeyDown("2"))
         {
-            SpawnEnemy(enemy2Prefab);
+            SpawnEnemy(1);
         }
 
         if (Input.GetKeyDown("0"))
@@ -67,12 +68,12 @@ public class SpawnManager : MonoBehaviour
         Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
     }
 
-    void SpawnEnemy(GameObject enemyType)
+    void SpawnEnemy(int enemyType)
     {
         //float spawnPosX = Random.Range(-spawnRange, spawnRange);
         //float spawnPosZ = Random.Range(-spawnRange, spawnRange);
         //Vector3 spawnPos = new Vector3(spawnPosX, 0, spawnPosZ);
-        Instantiate(enemyType, GenerateSpawnPosition(), enemyType.transform.rotation);
+        Instantiate(enemyPrefabs[enemyType], GenerateSpawnPosition(), enemyPrefabs[enemyType].transform.rotation);
     }
 
     void SpawnEnemyWave(int enemiesToSpawn)
@@ -103,12 +104,12 @@ public class SpawnManager : MonoBehaviour
 
         for (int i = 0; i < numEnemy1; i++)
         {
-            SpawnEnemy(enemyPrefab);
+            SpawnEnemy(0);
         }
 
         for (int i = 0; i < numEnemy2; i++)
         {
-            SpawnEnemy(enemy2Prefab);
+            SpawnEnemy(1);
         }
     }
 
