@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public bool hasPowerup;
     public float powerupStrength = 15.0f;
     public GameObject powerupIndicator;
+    public float powerupY;
 
     private Gamepad gamepad;
 
@@ -24,7 +25,18 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
 
+        Debug.Log($"Time scale: {Time.timeScale}");
+
         gamepad = Gamepad.current;
+        if (gamepad != null) { Debug.Log("Gamepad found"); }
+
+        if (Gamepad.all.Count > 0)
+        {
+            foreach (var pad in Gamepad.all)
+            {
+                Debug.Log($"Found gamepad: {pad.name} {pad.enabled}");
+            }
+        }
     }
 
     // Update is called once per frame
@@ -42,6 +54,11 @@ public class PlayerController : MonoBehaviour
         KeyboardInputs();
         if (gamepad != null) { GamepadInputs(); }
 
+        if (transform.position.y < -.15f && hasPowerup)
+        {
+            transform.position = new Vector3(transform.position.x, -.15f, transform.position.z);
+        }
+
 
     }
 
@@ -50,6 +67,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Powerup"))
         {
             hasPowerup = true;
+            powerupY = other.transform.position.y;
             Destroy(other.gameObject);
             StartCoroutine(PowerupCountdownRoutine());
             //powerupIndicator.gameObject.SetActive(true);
@@ -74,6 +92,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator PowerupCountdownRoutine() 
     {
+        hasPowerup = true;
         powerupIndicator.gameObject.SetActive(true);
         yield return new WaitForSeconds(7);
         hasPowerup = false;
@@ -103,13 +122,15 @@ public class PlayerController : MonoBehaviour
     {
         if (gamepad.leftTrigger.ReadValue() > 0.1f)
         {
-            //float power = gamepad.leftTrigger.ReadValue();
-            Stop();
+            float breakPower = gamepad.leftTrigger.ReadValue();
+            playerRb.velocity = playerRb.velocity * (1 - breakPower);
+            Debug.Log($"Break Power: {breakPower}");
         }
 
         if (gamepad.leftShoulder.wasPressedThisFrame)
         {
             Restart();
+            Debug.Log("leftShoulder pressed");
         }
            
         if (gamepad.rightShoulder.wasPressedThisFrame)

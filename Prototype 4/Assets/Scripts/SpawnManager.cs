@@ -28,6 +28,7 @@ public class SpawnManager : MonoBehaviour
 
         if (enemyCount == 0)
         {
+            SpawnPowerup();
             SpawnEnemyWave(waveNumber);
             waveNumber++;
         }
@@ -40,6 +41,11 @@ public class SpawnManager : MonoBehaviour
         if (Input.GetKeyDown("2"))
         {
             SpawnEnemy(enemy2Prefab);
+        }
+
+        if (Input.GetKeyDown("0"))
+        {
+            SpawnPowerup();
         }
 
 
@@ -55,12 +61,18 @@ public class SpawnManager : MonoBehaviour
         Vector3 randomPos = new Vector3(spawnPosX, 0, spawnPosZ);
         return randomPos;
     }
+
+    void SpawnPowerup()
+    {
+        Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
+    }
+
     void SpawnEnemy(GameObject enemyType)
     {
-        float spawnPosX = Random.Range(-spawnRange, spawnRange);
-        float spawnPosZ = Random.Range(-spawnRange, spawnRange);
-        Vector3 spawnPos = new Vector3(spawnPosX, 0, spawnPosZ);
-        Instantiate(enemyType, spawnPos, enemyType.transform.rotation);
+        //float spawnPosX = Random.Range(-spawnRange, spawnRange);
+        //float spawnPosZ = Random.Range(-spawnRange, spawnRange);
+        //Vector3 spawnPos = new Vector3(spawnPosX, 0, spawnPosZ);
+        Instantiate(enemyType, GenerateSpawnPosition(), enemyType.transform.rotation);
     }
 
     void SpawnEnemyWave(int enemiesToSpawn)
