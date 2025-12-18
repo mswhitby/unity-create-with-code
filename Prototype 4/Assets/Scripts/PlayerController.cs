@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 
@@ -15,11 +16,15 @@ public class PlayerController : MonoBehaviour
     public float powerupStrength = 15.0f;
     public GameObject powerupIndicator;
 
+    private Gamepad gamepad;
+
     // Start is called before the first frame update
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+
+        gamepad = Gamepad.current;
     }
 
     // Update is called once per frame
@@ -34,20 +39,10 @@ public class PlayerController : MonoBehaviour
 
         powerupIndicator.transform.position = transform.position + new Vector3(0, -.5f, 0);
 
-        if (Input.GetKeyDown("space"))
-        {
-            Stop();
-        }
+        KeyboardInputs();
+        if (gamepad != null) { GamepadInputs(); }
 
-        if (Input.GetKeyDown("r"))
-        {
-            Restart();
-        }
 
-        if (Input.GetKeyDown("p"))
-        {
-            StartCoroutine(PowerupCountdownRoutine());
-        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -86,7 +81,43 @@ public class PlayerController : MonoBehaviour
         //powerupIndicator.SetActive(false); // Shortcut
     }
 
+    void KeyboardInputs()
+    {
+        if (Input.GetKeyDown("space"))
+        {
+            Stop();
+        }
 
+        if (Input.GetKeyDown("r"))
+        {
+            Restart();
+        }
+
+        if (Input.GetKeyDown("p"))
+        {
+            StartCoroutine(PowerupCountdownRoutine());
+        }
+    }
+
+    void GamepadInputs()
+    {
+        if (gamepad.leftTrigger.ReadValue() > 0.1f)
+        {
+            //float power = gamepad.leftTrigger.ReadValue();
+            Stop();
+        }
+
+        if (gamepad.leftShoulder.wasPressedThisFrame)
+        {
+            Restart();
+        }
+           
+        if (gamepad.rightShoulder.wasPressedThisFrame)
+        {
+            StartCoroutine(PowerupCountdownRoutine());
+        }
+            
+    }
 
 
 
