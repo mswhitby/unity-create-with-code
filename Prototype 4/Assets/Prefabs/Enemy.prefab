@@ -147,4 +147,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
-  enemyCollisionStrength: 5
+  enemyCollisionStrength: 3
