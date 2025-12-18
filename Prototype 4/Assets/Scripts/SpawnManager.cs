@@ -63,9 +63,27 @@ public class SpawnManager : MonoBehaviour
 
     void SpawnEnemyWave(int enemiesToSpawn)
     {
-        int randomInt = Random.Range(0, enemiesToSpawn);
-        int numEnemy1 = Mathf.Max(randomInt, (enemiesToSpawn- randomInt));
-        int numEnemy2 = enemiesToSpawn - numEnemy1; ;
+        int numEnemy1;
+        int numEnemy2;
+
+        if (enemiesToSpawn < 3)
+        {
+            numEnemy1 = enemiesToSpawn;
+            numEnemy2 = 0;
+        }
+
+        else if (enemiesToSpawn < 8)
+        {
+            int randomInt = Random.Range(0, enemiesToSpawn);
+            numEnemy1 = Mathf.Max(randomInt, (enemiesToSpawn - randomInt));
+            numEnemy2 = enemiesToSpawn - numEnemy1; ;
+        }
+
+        else
+        {
+            numEnemy1 = Random.Range(0, enemiesToSpawn);
+            numEnemy2 = enemiesToSpawn - numEnemy1; ;
+        }
 
         Debug.Log($"Enemy1: {numEnemy1}, Enemy2: {numEnemy2}");
 
