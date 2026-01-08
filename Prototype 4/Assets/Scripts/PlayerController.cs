@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 5.0f;
 
     public bool hasPowerup;
+    public float powerUpCount;
     public float powerupStrength = 15.0f;
     public GameObject powerupIndicator;
     public float powerupY;
@@ -66,7 +67,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Powerup"))
         {
-            hasPowerup = true;
+            //hasPowerup = true;
             powerupY = other.transform.position.y;
             Destroy(other.gameObject);
             StartCoroutine(PowerupCountdownRoutine());
@@ -92,12 +93,20 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator PowerupCountdownRoutine() 
     {
+        powerUpCount++;
         hasPowerup = true;
         powerupIndicator.gameObject.SetActive(true);
         yield return new WaitForSeconds(7);
-        hasPowerup = false;
-        powerupIndicator.gameObject.SetActive(false);
-        //powerupIndicator.SetActive(false); // Shortcut
+        powerUpCount--;
+
+        if (powerUpCount <= 0)
+        {
+            hasPowerup = false;
+            powerupIndicator.gameObject.SetActive(false);
+            //powerupIndicator.SetActive(false); // Shortcut
+        }
+
+
     }
 
     void KeyboardInputs()
